@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ko" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🩷 HKCode Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            heart: {
+              50:  '#fff0f5',
+              100: '#ffe0ec',
+              200: '#ffb3d0',
+              300: '#ff80b0',
+              400: '#ff4d8e',
+              500: '#f72585',
+              600: '#d4006e',
+              700: '#a80057',
+              800: '#7c003f',
+              900: '#500029',
+            }
+          },
+          boxShadow: {
+            glow: '0 0 20px rgba(247, 37, 133, 0.4)',
+            'glow-lg': '0 0 40px rgba(247, 37, 133, 0.35)',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    body { font-family: 'Inter', sans-serif; }
+
+    .heart-pulse {
+      display: inline-block;
+      animation: heartbeat 1.4s ease-in-out infinite;
+    }
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(1); }
+      14%       { transform: scale(1.25); }
+      28%       { transform: scale(1); }
+      42%       { transform: scale(1.2); }
+      70%       { transform: scale(1); }
+    }
+
+    .fade-in {
+      animation: fadeIn 0.4s ease-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .input-glow:focus {
+      box-shadow: 0 0 0 3px rgba(247, 37, 133, 0.3);
+    }
+  </style>
+</head>
+
+<body class="bg-gray-950 text-gray-100 min-h-screen flex flex-col items-center justify-start py-14 px-4">
+
+  <!-- Header -->
+  <div class="mb-10 text-center">
+    <div class="text-6xl mb-3"><span class="heart-pulse">🩷</span></div>
+    <h1 class="text-4xl font-bold tracking-tight text-heart-400">HKCode Dashboard</h1>
+    <p class="text-gray-400 mt-2 text-sm">판매량 최대값 조회 시스템</p>
+  </div>
+
+  <!-- Card -->
+  <div class="w-full max-w-lg bg-gray-900 border border-gray-800 rounded-2xl shadow-glow-lg p-8">
+
+    <h2 class="text-lg font-semibold text-heart-300 mb-6 flex items-center gap-2">
+      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+        <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+      </svg>
+      조회 조건 입력
+    </h2>
+
+    <form id="queryForm" class="space-y-5">
+
+      <!-- Region ID -->
+      <div>
+        <label class="block text-sm font-medium text-gray-300 mb-1.5">
+          Region ID <span class="text-heart-500">*</span>
+        </label>
+        <input
+          id="regionid"
+          type="text"
+          placeholder="예: A42"
+          required
+          class="input-glow w-full bg-gray-800 border border-gray-700 text-gray-100 placeholder-gray-500
+                 rounded-xl px-4 py-3 text-sm outline-none transition
+                 focus:border-heart-500 focus:bg-gray-800"
+        />
+      </div>
+
+      <!-- Product Group -->
+      <div>
+        <label class="block text-sm font-medium text-gray-300 mb-1.5">
+          Product Group
+        </label>
+        <input
+          id="productgroup"
+          type="text"
+          placeholder="예: haiteam"
+          class="input-glow w-full bg-gray-800 border border-gray-700 text-gray-100 placeholder-gray-500
+                 rounded-xl px-4 py-3 text-sm outline-none transition
+                 focus:border-heart-500 focus:bg-gray-800"
+        />
+      </div>
+
+      <!-- Submit -->
+      <button
+        type="submit"
+        id="submitBtn"
+        class="w-full bg-heart-600 hover:bg-heart-500 active:bg-heart-700
+               text-white font-semibold py-3 rounded-xl transition-all duration-200
+               shadow-glow hover:shadow-glow-lg flex items-center justify-center gap-2"
+      >
+        <span id="btnText">🩷 조회하기</span>
+        <svg id="spinner" class="hidden w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"/>
+        </svg>
+      </button>
+    </form>
+  </div>
+
+  <!-- Error Banner -->
+  <div id="errorBanner"
+       class="hidden w-full max-w-lg mt-4 bg-red-900/60 border border-red-700 text-red-300
+              rounded-xl px-5 py-4 text-sm flex items-start gap-3 fade-in">
+    <svg class="w-5 h-5 mt-0.5 flex-shrink-0 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+      <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
+    </svg>
+    <span id="errorMsg"></span>
+  </div>
+
+  <!-- Result Table -->
+  <div id="resultSection" class="hidden w-full max-w-lg mt-6 fade-in">
+    <h2 class="text-sm font-semibold text-heart-300 uppercase tracking-widest mb-3 flex items-center gap-2">
+      <span class="inline-block w-2 h-2 rounded-full bg-heart-500 animate-pulse"></span>
+      조회 결과
+    </h2>
+    <div class="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-glow">
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="bg-gray-800/70 border-b border-gray-700">
+            <th class="text-left px-5 py-3 text-heart-400 font-semibold w-1/2">항목</th>
+            <th class="text-left px-5 py-3 text-heart-400 font-semibold w-1/2">값</th>
+          </tr>
+        </thead>
+        <tbody id="resultBody" class="divide-y divide-gray-800">
+          <!-- rows injected by JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- History Table -->
+  <div id="historySection" class="hidden w-full max-w-lg mt-8 fade-in">
+    <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-widest mb-3">조회 기록</h2>
+    <div class="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden">
+      <table class="w-full text-xs">
+        <thead>
+          <tr class="bg-gray-800/50 border-b border-gray-800">
+            <th class="text-left px-4 py-2.5 text-gray-400 font-medium">Region</th>
+            <th class="text-left px-4 py-2.5 text-gray-400 font-medium">Group</th>
+            <th class="text-left px-4 py-2.5 text-gray-400 font-medium">Max Qty</th>
+            <th class="text-left px-4 py-2.5 text-gray-400 font-medium">Status</th>
+            <th class="text-left px-4 py-2.5 text-gray-400 font-medium">시각</th>
+          </tr>
+        </thead>
+        <tbody id="historyBody" class="divide-y divide-gray-800/60 text-gray-300">
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <p class="mt-12 text-xs text-gray-700">HKCode &copy; 2025 &nbsp;·&nbsp; Spring MVC + Node.js</p>
+
+<script>
+  const API_URL = 'http://localhost:8181/getMaxQty';
+  const history = [];
+
+  const form        = document.getElementById('queryForm');
+  const submitBtn   = document.getElementById('submitBtn');
+  const btnText     = document.getElementById('btnText');
+  const spinner     = document.getElementById('spinner');
+  const errorBanner = document.getElementById('errorBanner');
+  const errorMsg    = document.getElementById('errorMsg');
+  const resultSec   = document.getElementById('resultSection');
+  const resultBody  = document.getElementById('resultBody');
+  const historySec  = document.getElementById('historySection');
+  const historyBody = document.getElementById('historyBody');
+
+  const LABELS = {
+    regionId:     'Region ID',
+    productGroup: 'Product Group',
+    maxQty:       '최대 판매량',
+    status:       '상태',
+  };
+
+  function setLoading(on) {
+    submitBtn.disabled = on;
+    spinner.classList.toggle('hidden', !on);
+    btnText.textContent = on ? '조회 중...' : '🩷 조회하기';
+    submitBtn.classList.toggle('opacity-60', on);
+  }
+
+  function showError(msg) {
+    errorMsg.textContent = msg;
+    errorBanner.classList.remove('hidden');
+    resultSec.classList.add('hidden');
+  }
+
+  function hideError() {
+    errorBanner.classList.add('hidden');
+  }
+
+  function renderResult(data) {
+    hideError();
+    resultBody.innerHTML = '';
+
+    const order = ['regionId', 'productGroup', 'maxQty', 'status'];
+    order.forEach(key => {
+      const val = data[key] ?? '-';
+      const isStatus = key === 'status';
+      const statusColor = isStatus
+        ? (val === 'success' ? 'text-emerald-400' : 'text-red-400')
+        : 'text-gray-100';
+
+      const tr = document.createElement('tr');
+      tr.className = 'hover:bg-gray-800/40 transition-colors';
+      tr.innerHTML = `
+        <td class="px-5 py-3.5 text-gray-400 font-medium">${LABELS[key] ?? key}</td>
+        <td class="px-5 py-3.5 font-semibold ${statusColor}">${val}</td>
+      `;
+      resultBody.appendChild(tr);
+    });
+
+    resultSec.classList.remove('hidden');
+    resultSec.classList.add('fade-in');
+  }
+
+  function addHistory(regionid, productgroup, data) {
+    const now = new Date().toLocaleTimeString('ko-KR');
+    history.unshift({ regionid, productgroup, data, now });
+
+    historyBody.innerHTML = '';
+    history.slice(0, 10).forEach(h => {
+      const isOk = h.data.status === 'success';
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td class="px-4 py-2.5">${h.data.regionId ?? h.regionid}</td>
+        <td class="px-4 py-2.5">${h.data.productGroup ?? h.productgroup ?? '-'}</td>
+        <td class="px-4 py-2.5 font-semibold text-heart-400">${h.data.maxQty ?? '-'}</td>
+        <td class="px-4 py-2.5">
+          <span class="inline-block px-2 py-0.5 rounded-full text-xs font-medium
+            ${isOk ? 'bg-emerald-900/60 text-emerald-400' : 'bg-red-900/60 text-red-400'}">
+            ${h.data.status ?? '-'}
+          </span>
+        </td>
+        <td class="px-4 py-2.5 text-gray-500">${h.now}</td>
+      `;
+      historyBody.appendChild(tr);
+    });
+
+    historySec.classList.remove('hidden');
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const regionid     = document.getElementById('regionid').value.trim();
+    const productgroup = document.getElementById('productgroup').value.trim();
+
+    if (!regionid) {
+      showError('Region ID를 입력해주세요.');
+      return;
+    }
+
+    setLoading(true);
+    hideError();
+
+    const body = new URLSearchParams({ regionid });
+    if (productgroup) body.append('productgroup', productgroup);
+
+    try {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: body.toString(),
+      });
+
+      if (!res.ok) throw new Error(`서버 오류: HTTP ${res.status}`);
+
+      const data = await res.json();
+      renderResult(data);
+      addHistory(regionid, productgroup, data);
+
+    } catch (err) {
+      showError(err.message || '알 수 없는 오류가 발생했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  });
+</script>
+</body>
+</html>

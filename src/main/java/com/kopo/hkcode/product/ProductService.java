@@ -1,33 +1,28 @@
 package com.kopo.hkcode.product;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import javax.sql.DataSource;
-
 public class ProductService {
-
     private final DataSource dataSource;
     private final List<String> managerList;
-
     public ProductService(DataSource dataSource, List<String> managerList) {
         this.dataSource = dataSource;
         this.managerList = managerList;
     }
-
-    // 기존 메서드
-    public String getMaxQtyByRegion(String regionId) {
+    public String getMaxQtyByRegion(String regionId, String productGroup) {
         String result = "";
-        String sql = "SELECT MAX(QTY) FROM kopo_channel_seasonality_new WHERE regionid = ?";
+        String sql = "SELECT MAX(QTY) FROM kopo_channel_seasonality_new WHERE regionid = ? AND PRODUCT = ?";
         try (Connection conn = dataSource.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setString(1, regionId);
+            pstmt.setString(2, productGroup);
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
                     int maxQty = rs.getInt(1);
-                    result = "지역 [" + regionId + "]의 최대 판매량은 " + maxQty + "개 입니다.";
+                    result = "지역 [" + regionId + "], 제품군 [" + productGroup + "]의 최대 판매량은 " + maxQty + "개 입니다.";
                 }
             }
         } catch (Exception e) {
@@ -40,7 +35,7 @@ public class ProductService {
         return result;
     }
 
- // 2015년도 데이터 건수 조회
+    // 기존 메서드
     public String getCountByYear2015() {
         String result = "";
         String sql = "SELECT COUNT(*) FROM kopo_channel_seasonality_new WHERE YEARWEEK LIKE '2015%'";
@@ -56,6 +51,5 @@ public class ProductService {
             e.printStackTrace();
         }
         return result;
-    	}
-	}
-
+    }
+}

@@ -3,32 +3,30 @@ package com.kopo.hkcode.product;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.stereotype.Controller;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+@RestController
+@CrossOrigin(origins = "http://localhost:3000")
 public class ProductController {
 
+    @Autowired
+    private ProductService productService;
+
     @PostMapping("/getMaxQty")
-    @ResponseBody
-    public Map<String, Object> getMaxQty(@RequestParam("regionid") String regionid) {
+    public Map<String, Object> getMaxQty(@RequestParam("regionid") String regionid,
+                                          @RequestParam("productgroup") String productgroup) {
+
+        String result = productService.getMaxQtyByRegion(regionid, productgroup);
 
         Map<String, Object> response = new HashMap<>();
-        String productgroup = "haiteam";
-
-        try {
-            int maxQty = 500;
-            response.put("regionId", regionid);
-            response.put("productGroup", productgroup);
-            response.put("maxQty", maxQty);
-            response.put("status", "success");
-        } catch (Exception e) {
-            response.put("status", "error");
-            response.put("message", e.getMessage());
-        }
-
+        response.put("regionId", regionid);
+        response.put("productGroup", productgroup);
+        response.put("maxQty", result);
+        response.put("status", "success");
         return response;
     }
 }
