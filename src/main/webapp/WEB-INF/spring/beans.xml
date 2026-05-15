@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<context:component-scan
+		base-package="com. kopo. hkcode. annot" />
+	<!-- Hello + StringPrinter : 문자열 저장 → JSP 전달용 <bean id="hello" class="com.kopo.hkcode.pojo.Hello"> 
+		<property name="name" value="spring"></property> <property name="printer" 
+		ref="stringPrinter"></property> </bean> -->
+
+	<!-- Hello + ConsolePrinter : bean id 를 하나 더 생성 <bean id="helloConsole" 
+		class="com.kopo.hkcode.pojo.Hello"> <property name="name" value="ekdms"></property> 
+		<property name="printer" ref="consolePrinter"></property> </bean> <bean id="stringPrinter" 
+		class="com.kopo.hkcode.pojo.StringPrinter"></bean> <bean id="consolePrinter" 
+		class="com.kopo.hkcode.pojo.ConsolePrinter"></bean> -->
+
+</beans>
