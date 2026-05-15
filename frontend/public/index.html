@@ -103,12 +103,13 @@
       <!-- Product Group -->
       <div>
         <label class="block text-sm font-medium text-gray-300 mb-1.5">
-          Product Group
+          Product Group <span class="text-heart-500">*</span>
         </label>
         <input
           id="productgroup"
           type="text"
-          placeholder="예: haiteam"
+          placeholder="예: PRODUCT59"
+          required
           class="input-glow w-full bg-gray-800 border border-gray-700 text-gray-100 placeholder-gray-500
                  rounded-xl px-4 py-3 text-sm outline-none transition
                  focus:border-heart-500 focus:bg-gray-800"
@@ -289,8 +290,7 @@
     setLoading(true);
     hideError();
 
-    const body = new URLSearchParams({ regionid });
-    if (productgroup) body.append('productgroup', productgroup);
+    const body = new URLSearchParams({ regionid, productgroup });
 
     try {
       const res = await fetch(API_URL, {
